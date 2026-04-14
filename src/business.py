@@ -26,7 +26,8 @@ def calculate_average_score(student_id: int) -> float:
     total_weight = 0
     total_score = 0.0
     for grade in grades:
-        subject_id = grade[2]   # tuple: (id, student_id, subject_id, score)
+        # grade là tuple (id, student_id, subject_id, score)
+        subject_id = grade[2]
         score = grade[3]
         credits = get_subject_credits(subject_id)
         total_weight += credits

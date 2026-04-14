@@ -1,63 +1,46 @@
-from business import StudentService, SubjectService, GradeService
+from src.data_access import get_all_students, get_all_subjects
+from src.business import add_grade, calculate_average_score
 
-student_service = StudentService()
-subject_service = SubjectService()
-grade_service = GradeService()
+def display_menu():
+    print("\n=== HỆ THỐNG QUẢN LÝ ĐIỂM HỌC SINH ===")
+    print("1. Xem danh sách học sinh")
+    print("2. Xem danh sách môn học")
+    print("3. Nhập điểm cho học sinh")
+    print("4. Tính điểm trung bình của học sinh")
+    print("5. Thoát")
 
+def show_students():
+    students = get_all_students()
+    if not students:
+        print("Chưa có học sinh nào.")
+    else:
+        print("\nDanh sách học sinh:")
+        for s in students:
+            print(f"ID: {s[0]} | Tên: {s[1]} | Tuổi: {s[2]}")
 
-def menu():
-    print("\n===== STUDENT GRADE MANAGEMENT =====")
-    print("1. Add student")
-    print("2. Add subject")
-    print("3. Add grade")
-    print("4. View students")
-    print("0. Exit")
+def show_subjects():
+    subjects = get_all_subjects()
+    if not subjects:
+        print("Chưa có môn học nào.")
+    else:
+        print("\nDanh sách môn học:")
+        for sub in subjects:
+            print(f"ID: {sub[0]} | Tên: {sub[1]} | Tín chỉ: {sub[2]}")
 
+def input_grade():
+    try:
+        student_id = int(input("Nhập ID học sinh: "))
+        subject_id = int(input("Nhập ID môn học: "))
+        score = float(input("Nhập điểm (0-10): "))
+        add_grade(student_id, subject_id, score)
+        print("Đã lưu điểm thành công!")
+    except ValueError as e:
+        print(f"Lỗi: {e}")
 
-def add_student():
-    name = input("Enter student name: ")
-    age = int(input("Enter age: "))
-    student_service.add_student(name, age)
-    print("Added successfully!")
-
-
-def add_subject():
-    name = input("Enter subject name: ")
-    credits = int(input("Enter credits: "))
-    subject_service.add_subject(name, credits)
-    print("Added successfully!")
-
-
-def add_grade():
-    student_id = int(input("Enter student ID: "))
-    subject_id = int(input("Enter subject ID: "))
-    score = float(input("Enter score: "))
-    grade_service.add_grade(student_id, subject_id, score)
-    print("Added successfully!")
-
-
-def view_students():
-    students = student_service.get_all_students()
-    print("\n--- Students ---")
-    for s in students:
-        print(s)
-
-
-def run():
-    while True:
-        menu()
-        choice = input("Choose: ")
-
-        if choice == "1":
-            add_student()
-        elif choice == "2":
-            add_subject()
-        elif choice == "3":
-            add_grade()
-        elif choice == "4":
-            view_students()
-        elif choice == "0":
-            print("Goodbye!")
-            break
-        else:
-            print("Invalid choice!")
+def show_average():
+    try:
+        student_id = int(input("Nhập ID học sinh: "))
+        avg = calculate_average_score(student_id)
+        print(f"Điểm trung bình của học sinh ID {student_id} là: {avg}")
+    except ValueError:
+        print("ID không hợp lệ.")
